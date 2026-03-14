@@ -1,18 +1,14 @@
-require('dotenv').config();
-const http = require('http');
-const app = require('./src/app');
-const { Server } = require('socket.io');
+const express = require("express");
+const ticketRoutes = require("./src/routes/ticket.routes");
+const parkingRoutes = require("./src/routes/parking.routes");
+const app = express();
+app.use("/api/parking", parkingRoutes);
+app.use(express.json());
 
-const server = http.createServer(app);
+app.use("/api/tickets", ticketRoutes);
 
-const io = new Server(server, {
-  cors: { origin: "*" }
-});
+const PORT = 3000;
 
-require('./src/sockets/socket')(io);
-
-const PORT = process.env.PORT || 3000;
-
-server.listen(PORT, () => {
-  console.log("Servidor corriendo en puerto " + PORT);
+app.listen(PORT, () => {
+ console.log(`Servidor corriendo en puerto ${PORT}`);
 });
